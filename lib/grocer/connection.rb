@@ -21,6 +21,12 @@ module Grocer
       end
     end
 
+    def read_nonblock(maxlen)
+      with_connection do
+        ssl.read_nonblock(maxlen)
+      end
+    end
+
     def write(content)
       with_connection do
         ssl.write(content)
