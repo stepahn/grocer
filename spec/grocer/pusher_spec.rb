@@ -14,4 +14,26 @@ describe Grocer::Pusher do
       connection.should have_received(:write).with('abc123')
     end
   end
+
+  def stub_reply
+    # "Reads" two failed deliveries: one on Jan 1; the other on Jan 2
+    connection.stubs(:read_nonblock).
+               with(6).
+               returns([8, 8, 523].pack('CCN')).
+               then.
+               returns(nil)
+  end
+
+  let(:identifier) { 523 }
+  let(:command) { 8 }
+  let(:status) { 8 }
+
+  it 'reads replies from the connection' do
+    stub_reply
+
+    reply = subject.read_reply
+    reply.identifier.should == identifier
+    reply.command.should == command
+    reply.status.should == status
+  end
 end

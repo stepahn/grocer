@@ -1,3 +1,5 @@
+require 'grocer/reply'
+
 module Grocer
   class Pusher
     def initialize(connection)
@@ -9,8 +11,8 @@ module Grocer
     end
 
     def read_reply
-      packet = @connection.read_nonblock(6).unpack("CCN")
-      {command: packet[0], status: packet[1], id: packet[2]}
+      buf = @connection.read_nonblock(Reply::LENGTH)
+      return Reply.new(buf)
     rescue IO::WaitReadable
       # Reading would block, that means there is nothing to read yet
     rescue EOFError
