@@ -16,7 +16,6 @@ describe Grocer::Pusher do
   end
 
   def stub_reply
-    # "Reads" two failed deliveries: one on Jan 1; the other on Jan 2
     connection.stubs(:read_nonblock).
                with(6).
                returns([8, 8, 523].pack('CCN')).
@@ -28,7 +27,7 @@ describe Grocer::Pusher do
   let(:command) { 8 }
   let(:status) { 8 }
 
-  it 'reads replies from the connection' do
+  it 'reads a reply from the connection' do
     stub_reply
 
     reply = subject.read_reply
