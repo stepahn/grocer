@@ -1,4 +1,5 @@
 require 'grocer/reply'
+require 'timeout'
 
 module Grocer
   class Pusher
@@ -11,12 +12,14 @@ module Grocer
     end
 
     def read_reply
-      buf = @connection.read_nonblock(Reply::LENGTH)
-      return Reply.new(buf)
-    rescue IO::WaitReadable
-      # Reading would block, that means there is nothing to read yet
+      Timeout::timeout(2) do
+        buf = @connection.read(Reply::LENGTH)
+        return Reply.new(buf)
+      end
     rescue EOFError
       # EOF, nothing to read
+    rescue Timeout::Error
+      # nothing to read
     end
   end
 end
