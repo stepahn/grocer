@@ -16,7 +16,7 @@ describe Grocer::Pusher do
   end
 
   def stub_reply
-    connection.stubs(:read).
+    connection.stubs(:read_nonblock).
                with(6).
                returns([8, 8, 523].pack('CCN')).
                then.
@@ -37,7 +37,7 @@ describe Grocer::Pusher do
   end
 
   it 'timeout on reading reply' do
-    connection.stubs(:read).with(6) { sleep 10 }
+    connection.stubs(:read_nonblock).with(6).returns(nil)
 
     reply = subject.read_reply
     reply.should == nil

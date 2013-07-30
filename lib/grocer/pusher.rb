@@ -1,4 +1,3 @@
-require 'timeout'
 require 'grocer/error_response'
 
 module Grocer
@@ -12,14 +11,13 @@ module Grocer
     end
 
     def read_reply
-      Timeout::timeout(2) do
-        buf = @connection.read(ErrorResponse::LENGTH)
-        return ErrorResponse.new(buf)
-      end
+      sleep 2
+      buf = @connection.read_nonblock(ErrorResponse::LENGTH)
+      return ErrorResponse.new(buf) unless buf.nil?
+    rescue IO::WaitReadable
+      # Reading would block, that means there is nothing to read yet
     rescue EOFError
       # EOF, nothing to read
-    rescue Timeout::Error
-      # nothing to read
     end
   end
 end
