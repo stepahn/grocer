@@ -23,7 +23,7 @@ module Grocer
       # C => 1 byte command
       # C => 1 byte status
       # N => 4 byte identifier
-      command, @status_code, @identifier = binary_tuple.unpack('CCN')
+      @command, @status_code, @identifier = binary_tuple.unpack('CCN') unless binary_tuple.nil?
       raise InvalidFormatError unless @status_code && @identifier
       raise InvalidCommandError unless @command == COMMAND
     end

@@ -18,6 +18,10 @@ describe Grocer::ErrorResponse do
       -> { described_class.new(invalid_binary_tuple) }.should
         raise_error(Grocer::InvalidFormatError)
     end
+
+    it 'raises an exception when no data is present' do
+      expect { described_class.new(nil) }.to raise_error(Grocer::InvalidFormatError)
+    end
   end
 
   it 'finds the status from the status code' do
