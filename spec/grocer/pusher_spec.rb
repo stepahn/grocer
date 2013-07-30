@@ -33,7 +33,7 @@ describe Grocer::Pusher do
     reply = subject.read_reply
     reply.identifier.should == identifier
     reply.command.should == command
-    reply.status.should == status
+    reply.status_code.should == status
   end
 
   it 'timeout on reading reply' do

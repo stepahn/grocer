@@ -1,5 +1,7 @@
 module Grocer
   class ErrorResponse
+    LENGTH = 6
+
     STATUS_CODE_DESCRIPTIONS = {
       0 => 'No errors encountered',
       1 => 'Processing error',
@@ -15,7 +17,7 @@ module Grocer
 
     COMMAND = 8
 
-    attr_accessor :status_code, :identifier
+    attr_accessor :status_code, :identifier, :command
 
     def initialize(binary_tuple)
       # C => 1 byte command
@@ -23,7 +25,7 @@ module Grocer
       # N => 4 byte identifier
       command, @status_code, @identifier = binary_tuple.unpack('CCN')
       raise InvalidFormatError unless @status_code && @identifier
-      raise InvalidCommandError unless command == COMMAND
+      raise InvalidCommandError unless @command == COMMAND
     end
 
     def status

@@ -1,5 +1,5 @@
-require 'grocer/reply'
 require 'timeout'
+require 'grocer/error_response'
 
 module Grocer
   class Pusher
@@ -13,8 +13,8 @@ module Grocer
 
     def read_reply
       Timeout::timeout(2) do
-        buf = @connection.read(Reply::LENGTH)
-        return Reply.new(buf)
+        buf = @connection.read(ErrorResponse::LENGTH)
+        return ErrorResponse.new(buf)
       end
     rescue EOFError
       # EOF, nothing to read
